@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/springmvc-rocketmq-common/springmvc-rocketmq-common.iml" filepath="$PROJECT_DIR$/springmvc-rocketmq-common/springmvc-rocketmq-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springmvc-rocketmq-consumer/springmvc-rocketmq-consumer.iml" filepath="$PROJECT_DIR$/springmvc-rocketmq-consumer/springmvc-rocketmq-consumer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springmvc-rocketmq-parent.iml" filepath="$PROJECT_DIR$/springmvc-rocketmq-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springmvc-rocketmq-producer/springmvc-rocketmq-producer.iml" filepath="$PROJECT_DIR$/springmvc-rocketmq-producer/springmvc-rocketmq-producer.iml" />
+    </modules>
+  </component>
+</project>
