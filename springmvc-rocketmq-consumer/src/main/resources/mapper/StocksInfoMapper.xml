@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.awifi.springmvcrocketmq.consumer.mapper.StocksInfoMapper">
+    <resultMap id="BaseResultMap" type="com.awifi.springmvcrocketmq.consumer.entity.StocksInfo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="product_id" jdbcType="VARCHAR" property="productId"/>
+        <result column="stocks_number" jdbcType="BIGINT" property="stocksNumber"/>
+        <result column="crt_time" jdbcType="DATE" property="crtTime"/>
+        <result column="upd_time" jdbcType="DATE" property="updTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, confirm, counts
+    </sql>
+    <insert id="insert"
+            parameterType="com.awifi.springmvcrocketmq.consumer.entity.StocksInfo" keyColumn="id" keyProperty="id">
+        insert into awifi_stocks_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="productId != null">
+                product_id,
+            </if>
+            <if test="stocksNumber != null">
+                stocks_number,
+            </if>
+            <if test="crtTime != null">
+                crt_time,
+            </if>
+            <if test="updTime != null">
+                upd_time,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id, jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address, jdbcType=VARCHAR},
+            </if>
+            <if test="productId != null">
+                #{product_id, jdbcType=VARCHAR},
+            </if>
+            <if test="stocksNumber != null">
+                #{stocksNumber, jdbcType=BIGINT},
+            </if>
+            <if test="crtTime != null">
+                #{crtTime, jdbcType=DATE},
+            </if>
+            <if test="updTime != null">
+                #{updTime, jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from awifi_stocks_info
+        where id = #{id,jdbcType=VARCHAR}
+        limit 1
+    </select>
+    <update id="updateStocks"
+            parameterType="com.awifi.springmvcrocketmq.consumer.entity.StocksInfo">
+        update awifi_stocks_info
+        <set>
+            <if test="updTime != null">
+                upd_time = #{updTime, jdbcType=DATE},
+            </if>
+            stocks_number =stocks_number -#{stocksNumber,jdbcType=BIGINT}
+        </set>
+        where product_id = #{productId,jdbcType=VARCHAR}
+    </update>
+</mapper>

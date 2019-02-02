@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			        http://www.springframework.org/schema/beans/spring-beans.xsd
+			        http://www.springframework.org/schema/tx
+			        http://www.springframework.org/schema/tx/spring-tx.xsd
+			        http://www.springframework.org/schema/aop
+			        http://www.springframework.org/schema/aop/spring-aop.xsd
+			        http://www.springframework.org/schema/mvc
+			        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+			        http://www.springframework.org/schema/context
+			        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 配置service：方法一，使用包扫描，扫描在类中加@Service注解的bean -->
+    <context:component-scan base-package="com.awifi.springmvcrocketmq.*"/>
+
+    <context:property-placeholder location="classpath:rocketmq.properties" />
+
+    <!-- rocketmq 消费者 拉模式初始化 -->
+    <bean id="pullConsumer" class="com.awifi.springmvcrocketmq.configuration.DefaultMQPullConsumerAutoConfiguration" init-method="init">
+        <property name="namesrvAddr" value="${spring.rocketmq.namesrv-addr}"></property>
+        <property name="instanceName" value="${spring.rocketmq.instance-name}"></property>
+        <property name="consumerGroupName" value="${spring.rocketmq.producer.pullConsumerGroupName}"></property>
+    </bean>
+
+    <!-- rocketmq 消费者 推模式初始化 -->
+    <bean id="pushConsumer" class="com.awifi.springmvcrocketmq.configuration.DefaultMQPushConsumerAutoConfiguration" init-method="init">
+        <property name="namesrvAddr" value="${spring.rocketmq.namesrv-addr}"></property>
+        <property name="instanceName" value="${spring.rocketmq.instance-name}"></property>
+        <property name="consumerGroupName" value="${spring.rocketmq.producer.pushConsumerGroupName}"></property>
+        <property name="subscribe" >
+            <list>
+                <value>${spring.rocketmq.consumer.subscribe[0]}</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="StringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+        <constructor-arg value="UTF-8"></constructor-arg>
+    </bean>
+    <bean id="noBalanceRestTemplate" class="org.springframework.web.client.RestTemplate">
+        <constructor-arg ref="StringHttpMessageConverter"></constructor-arg>
+    </bean>
+
+</beans>

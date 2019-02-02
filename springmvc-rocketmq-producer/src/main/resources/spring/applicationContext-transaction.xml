@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			        http://www.springframework.org/schema/beans/spring-beans.xsd
+			        http://www.springframework.org/schema/tx
+			        http://www.springframework.org/schema/tx/spring-tx.xsd
+			        http://www.springframework.org/schema/aop
+			        http://www.springframework.org/schema/aop/spring-aop.xsd
+			        http://www.springframework.org/schema/mvc
+			        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+			        http://www.springframework.org/schema/context
+			        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 声明式事务配置：
+     （1）1~3 配置通过包扫描正则匹配到txAdvice中的前缀配置，支持事务；
+     （2）4 支持未被正则匹配到txAdvice中的前缀配置开启事务，需要在方法开启@Transactional注解
+     -->
+    <!-- 1.事务管理权 对mybatis操作数据库事务控制，spring使用jdbc的事务控制类 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!-- 数据源 dataSource在applicationContext-dao.xml中配置了 -->
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- 2.通知 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 传播行为:以add、save、insert、delete、modify和update开头命名的方法使用事务控制 -->
+            <tx:method name="add*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="save*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="modify*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="find*" propagation="SUPPORTS" read-only="true" />
+            <tx:method name="get*" propagation="SUPPORTS" read-only="true" />
+            <tx:method name="select*" propagation="SUPPORTS" read-only="true" />
+            <tx:method name="list*" propagation="SUPPORTS" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 3.aop -->
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice"
+                     pointcut="execution(* com.awifi.springmvcrocketmq.producer.service.*.*(..))" />
+    </aop:config>
+
+    <!-- 4.开启事务支持，需要配合@Transactional使用：
+    支持tx:advice通知配置中没有被前缀参数正则匹配到的方法开启事务，需要在方法上加上注解@Transactional -->
+    <tx:annotation-driven/>
+
+    <!-- 5.maven 配置aop依赖 -->
+    <!-- aop依赖 -->
+    <!--    <dependency>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+            <version>${aopalliance.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectjweaver.version}</version>
+        </dependency>-->
+
+</beans>

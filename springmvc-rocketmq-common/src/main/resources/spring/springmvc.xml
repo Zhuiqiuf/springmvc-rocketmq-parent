@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+		        http://www.springframework.org/schema/beans
+		        http://www.springframework.org/schema/beans/spring-beans.xsd
+		        http://www.springframework.org/schema/mvc
+		        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		        http://www.springframework.org/schema/context
+		        http://www.springframework.org/schema/context/spring-context.xsd
+		        ">
+
+
+    <!-- 0.bean扫描配置：可以扫描controller、service等，扫描包名为com.ww.controller的控制器 -->
+    <context:component-scan base-package="com.ww.controller" />
+
+    <!-- 方法1：注解的映射器配置和注解的适配器配置 -->
+    <!-- 注解的映射器 -->
+    <!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"
+        /> -->
+    <!-- 注解的适配器 -->
+    <!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"
+        /> -->
+
+    <!-- 1.方法2：注解的映射器配置和注解的适配器配置，可以代替上边方法1注解映射器和注解适配器配置 -->
+    <mvc:annotation-driven></mvc:annotation-driven>
+
+    <!-- 2.视图解析器 解析jsp，默认使用jstl标签，classpath下得有jstl jar包 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 配置jsp路径的前缀 -->
+        <property name="prefix" value="/WEB-INF/view/" />
+        <!-- 配置jsp路径的后缀 -->
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- 3.对静态资源文件的访问，方案1 -->
+    <mvc:default-servlet-handler />
+
+</beans>

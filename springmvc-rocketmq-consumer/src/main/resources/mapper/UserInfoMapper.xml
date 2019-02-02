@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.awifi.springmvcrocketmq.consumer.mapper.UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.awifi.springmvcrocketmq.consumer.entity.UserInfo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="user_point" jdbcType="BIGINT" property="userPoint"/>
+        <result column="account" jdbcType="BIGINT" property="account"/>
+        <result column="fund_amount" jdbcType="BIGINT" property="fundAmount"/>
+        <result column="crt_time" jdbcType="DATE" property="crtTime"/>
+        <result column="upd_time" jdbcType="DATE" property="updTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, confirm, counts
+    </sql>
+    <insert id="insert"
+            parameterType="com.awifi.springmvcrocketmq.consumer.entity.UserInfo" keyColumn="id" keyProperty="id">
+        insert into awifi_user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="userPoint != null">
+                user_point,
+            </if>
+            <if test="account != null">
+                account,
+            </if>
+            <if test="fundAmount != null">
+                fund_amount,
+            </if>
+            <if test="crtTime != null">
+                crt_time,
+            </if>
+            <if test="updTime != null">
+                upd_time,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id, jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{user_id, jdbcType=VARCHAR},
+            </if>
+            <if test="userPoint != null">
+                #{userPoint, jdbcType=BIGINT},
+            </if>
+            <if test="account != null">
+                #{account, jdbcType=VARCHAR},
+            </if>
+            <if test="fundAmount != null">
+                #{fundAmount, jdbcType=BIGINT},
+            </if>
+            <if test="crtTime != null">
+                #{crtTime, jdbcType=DATE},
+            </if>
+            <if test="updTime != null">
+                #{updTime, jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from awifi_user_info
+        where id = #{id,jdbcType=VARCHAR}
+        limit 1
+    </select>
+
+    <update id="addPoint"
+            parameterType="com.awifi.springmvcrocketmq.consumer.entity.UserInfo">
+        update awifi_user_info
+        <set>
+            <if test="updTime != null">
+                upd_time = #{updTime, jdbcType=DATE},
+            </if>
+            user_point =user_point + #{userPoint,jdbcType=BIGINT}
+        </set>
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+</mapper>

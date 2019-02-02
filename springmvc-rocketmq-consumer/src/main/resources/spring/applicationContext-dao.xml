@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 0.加载数据库连接配置文件 -->
+    <context:property-placeholder ignore-unresolvable="true" location="classpath:db.properties" />
+
+    <!-- 1.数据源，使用dbcp2 -->
+    <!-- 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+            destroy-method="close">
+            <property name="driverClassName" value="${jdbc.driver}" />
+            <property name="url" value="${jdbc.url}" />
+            <property name="username" value="${jdbc.username}" />
+            <property name="password" value="${jdbc.password}" />
+            dbcp中连接池最大值配置
+            <property name="maxTotal" value="${jdbc.max}" />
+            最大空闲连接
+            <property name="maxIdle" value="${jdbc.idle}" />
+        </bean> -->
+
+    <!-- 1.数据源，使用druid -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="maxActive" value="${jdbc.max}" />
+        <property name="initialSize" value="${jdbc.min}" />
+        <property name="filters" value="${jdbc.filters}" />
+    </bean>
+    <!-- 1-2. druid监控配置，参考web.xml中druid配置 -->
+    <!-- 1-3. druid配置aop拦截servlet访问，方法名正则匹配拦截配置 -->
+    <bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut"
+          scope="prototype">
+        <property name="patterns">
+            <list>
+                <!-- 扫描service层包 -->
+                <value>com.awifi.springmvcrocketmq.consumer.*</value>
+            </list>
+        </property>
+    </bean>
+    <!-- 1-4.spring监控配置 -->
+    <bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor" />
+    <!-- 1-5.druid和spring关联配置 -->
+    <aop:config proxy-target-class="true">
+        <aop:advisor advice-ref="druid-stat-interceptor"
+                     pointcut-ref="druid-stat-pointcut"/>
+    </aop:config>
+
+    <!-- 2.sqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 加载mybatis的配置文件 -->
+        <property name="configLocation" value="classpath:mybatis/mybatis.xml"/>
+        <!-- 数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+
+        <!--<property name="mapperLocations" value="classpath*:mybatis/GoodsMapperExtend.xml" />-->
+        <!-- 指定Mybatis映射文件目录，不要将非映射文件放在这个目录 -->
+        <property name="mapperLocations" value="classpath*:mapper/*.xml" />
+    </bean>
+
+    <!-- 3.mapper扫描器配置：mapper批量扫描，从mapper包中扫描出mapper接口，自动创建代理对象并且在spring容器中注册
+    遵循一些规范：需要将mapper接口类名和mapper.xml映射文件名称保持一致，且在一个目录中
+    自动扫描出来的mapper的bean的id为mapper类名（首字母小写）
+     -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 指定扫描的包名
+        如果扫描多个包，每个包中间使用半角逗号分隔
+        -->
+        <property name="basePackage" value="com.awifi.springmvcrocketmq.consumer.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+</beans>
