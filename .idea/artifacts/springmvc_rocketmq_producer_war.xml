@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="springmvc-rocketmq-producer:war">
+    <output-path>$PROJECT_DIR$/springmvc-rocketmq-producer/target</output-path>
+    <root id="archive" name="springmvc-rocketmq-producer.war">
+      <element id="artifact" artifact-name="springmvc-rocketmq-producer:war exploded" />
+    </root>
+  </artifact>
+</component>

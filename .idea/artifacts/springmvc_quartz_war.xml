@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="springmvc-quartz:war">
+    <output-path>$PROJECT_DIR$/../springmvc-quartz-cluster/target</output-path>
+    <root id="archive" name="mall-goods.war">
+      <element id="artifact" artifact-name="springmvc-quartz:war exploded" />
+    </root>
+  </artifact>
+</component>
