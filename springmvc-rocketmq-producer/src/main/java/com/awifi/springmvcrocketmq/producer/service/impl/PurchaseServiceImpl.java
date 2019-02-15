@@ -25,10 +25,10 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
     public int addPurchaseList(PurchaseList purchaseList, String orderNumber){
         log.info("addPurchaseList start");
-        //int num=purchaseListMapper.insert(purchaseList);
-        while(true){
+        int num=purchaseListMapper.insert(purchaseList);
+        /*while(true){
             throw new RuntimeException();
-        }
-        //return num;
+        }*/
+        return num;
     }
 }

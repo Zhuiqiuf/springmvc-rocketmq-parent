@@ -6,11 +6,10 @@ import com.awifi.springmvcrocketmq.producer.entity.PurchaseList;
 import com.awifi.springmvcrocketmq.producer.httpentity.PointStockMsg;
 import com.awifi.springmvcrocketmq.producer.listener.TransactionListenerImpl;
 import lombok.extern.slf4j.Slf4j;
+import com.awifi.springmvcrocketmq.producer.entity.TopicEntity;
 import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.client.producer.TransactionMQProducer;
 import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,14 +28,17 @@ import java.util.UUID;
 @Slf4j
 public class PurchaseController {
 
+    /**事务消息发送者*/
     @Autowired
     private TransactionMQProducerAutoConfiguration transactionMQProducerAutoConfiguration;
+    /**事务消息本地事务监听器*/
     @Autowired
     private TransactionListenerImpl transactionListenerImpl;
 
 
-    @Value("${spring.rocketmq.producer.topic}")
-    private String producerTopic;
+    /**消息topic自定义配置类*/
+    @Autowired
+    private TopicEntity TopicEntity;
 
     @RequestMapping(value = "/purchase", method = RequestMethod.POST)
     public String purchase(@RequestBody Map<String,Object> params) {
@@ -61,8 +63,8 @@ public class PurchaseController {
         SendResult sendResult = null;
         try {
             //构造消息
-            Message msg = new Message(producerTopic,// topic
-                    "TagA",// tag
+            Message msg = new Message(TopicEntity.getTestTopic(),// topic
+                    TopicEntity.getTestTag(),// tag
                     "OrderID001",// key
                     (JSON.toJSONString(pointStockMsg)).getBytes());// body
 

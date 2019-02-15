@@ -17,16 +17,23 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @Slf4j
+/**
+ * 消息发送者控制器，用于提供给给客户端进行消息发送
+ */
 public class ProducerController {
 
+    /**普通消息发送者*/
     @Autowired
     private DefaultMQProducerAutoConfiguration defaultMQProducerAutoConfiguration;
 
+    /**事务消息发送者*/
     @Autowired
     private TransactionMQProducerAutoConfiguration transactionMQProducerAutoConfiguration;
+    /**事务消息本地事务监听器*/
     @Autowired
     private TransactionListenerImpl transactionListenerImpl;
 
+    /**消息topic自定义配置类*/
     @Autowired
     private TopicEntity TopicEntity;
 

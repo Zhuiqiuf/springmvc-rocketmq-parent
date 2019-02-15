@@ -18,18 +18,25 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
+ * @author Zhuiqiuf
  * 消息消费者，监听rocketmq消费者接受到消息后发布的事件，然后进行业务逻辑处理。
  */
 @Service
 @Slf4j
 public class ConsumerService {
+    /**加积分service类注入*/
     @Autowired
     private PointService pointService;
 
+    /**减库存操作service类注入*/
     @Autowired
     private StocksInfoService stocksInfoService;
 
 
+    /**
+     * 监听rocketmq消息并行进行加积分操作
+     * @param event
+     */
     @EventListener(condition = "#event.topic==@topicTagAddPoint.testTopic && #event.tag==@topicTagAddPoint.testTag")
     public void addPoint(RocketmqEvent event){
         DefaultMQPushConsumer consumer = event.getConsumer();
@@ -55,7 +62,7 @@ public class ConsumerService {
     }
 
     /**
-     *
+     *监听rocketmq消息进行减库存操作
      * @param event
      */
 

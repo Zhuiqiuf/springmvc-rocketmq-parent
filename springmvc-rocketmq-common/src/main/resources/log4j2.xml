@@ -89,7 +89,7 @@
             <appender-ref ref="RollingFileDebug"/>-->
         </root>
 
-        <Logger name="com.example.springbootquartz.component" level="debug"/>
+        <Logger name="com.awifi.springmvcrocketmq.configuration" level="debug"/>
 
         <!--记录druid-sql的记录：如果调试，可以将level设置为debug级别-->
         <logger name="druid.sql.Statement" level="error" additivity="false">

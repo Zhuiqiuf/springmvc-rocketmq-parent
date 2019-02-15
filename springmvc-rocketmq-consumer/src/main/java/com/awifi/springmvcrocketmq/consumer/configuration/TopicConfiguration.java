@@ -16,7 +16,7 @@ import org.springframework.core.env.Environment;
 @Configuration
 @PropertySource(value = "classpath:topics.properties")
 @Data
-public class TopicTagsConfiguration {
+public class TopicConfiguration {
     @Autowired
     Environment environment;
 

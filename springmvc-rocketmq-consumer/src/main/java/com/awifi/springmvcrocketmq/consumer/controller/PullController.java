@@ -24,6 +24,13 @@ public class PullController {
     @Autowired
     private ApplicationEventPublisher publisher;
 
+    /**
+     * 消息事件通知拉取消息 code码001
+     * 早期消息事件通知
+     * @param bizCode
+     * @param json
+     * @return
+     */
     @RequestMapping(value = "/pullConsumer", method = RequestMethod.GET)
     public String pullConsumer(@RequestParam("bizCode") String bizCode,@RequestParam(("json")) String json) {
         log.info("bizCode here "+bizCode+" and json here "+json);
@@ -31,6 +38,13 @@ public class PullController {
         return "ok";
     }
 
+    /**
+     * 消息事件通知拉取消息 code码002
+     * spring 4.2之后的可用任意类作为消息事件类
+     * @param bizCode
+     * @param json
+     * @return
+     */
     @RequestMapping(value = "/pullConsumerAny", method = RequestMethod.GET)
     public String pullConsumerAny(@RequestParam("bizCode") String bizCode,@RequestParam(("json")) String json) {
         log.info("bizCode here "+bizCode+" and json here "+json);
@@ -38,6 +52,13 @@ public class PullController {
         return "ok";
     }
 
+    /**
+     * 消息事件通知消息拉取 code码003
+     * 异步方式
+     * @param bizCode
+     * @param json
+     * @return
+     */
     @RequestMapping(value = "/pullConsumerAsync", method = RequestMethod.GET)
     public String pullConsumerAsync(@RequestParam("bizCode") String bizCode,@RequestParam(("json")) String json) {
         log.info("bizCode here "+bizCode+" and json here "+json);
